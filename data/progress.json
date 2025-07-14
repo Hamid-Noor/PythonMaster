@@ -1,0 +1,23 @@
+{
+  "completed_exercises": [],
+  "quiz_scores": {},
+  "settings": {
+    "language": "persian",
+    "difficulty_preference": "مبتدی",
+    "show_hints": true,
+    "auto_save": true
+  },
+  "statistics": {
+    "total_exercises_completed": 0,
+    "average_score": 0,
+    "time_spent": 0,
+    "streak": 0,
+    "achievements": []
+  },
+  "user_preferences": {
+    "code_theme": "default",
+    "font_size": "medium",
+    "show_line_numbers": true,
+    "auto_run_code": false
+  }
+}
