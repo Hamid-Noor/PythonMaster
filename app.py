@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import os
 from utils.persian_text import setup_persian_ui, get_text
+from utils.database import DatabaseManager
 
 # تنظیمات اولیه صفحه
 st.set_page_config(
@@ -16,6 +17,13 @@ setup_persian_ui()
 
 def initialize_session_state():
     """مقداردهی اولیه متغیرهای جلسه"""
+    if 'db_manager' not in st.session_state:
+        st.session_state.db_manager = DatabaseManager()
+        st.session_state.db_manager.populate_default_exercises()
+    
+    if 'user_id' not in st.session_state:
+        st.session_state.user_id = st.session_state.db_manager.get_or_create_user()
+    
     if 'user_progress' not in st.session_state:
         st.session_state.user_progress = {}
     if 'current_exercise' not in st.session_state:

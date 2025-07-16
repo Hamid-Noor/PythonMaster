@@ -6,6 +6,7 @@ from contextlib import redirect_stdout
 from utils.code_analyzer import CodeAnalyzer
 from utils.flowchart_generator import FlowchartGenerator
 from utils.persian_text import setup_persian_ui
+from utils.database import DatabaseManager
 
 # تنظیمات صفحه
 st.set_page_config(
@@ -18,6 +19,13 @@ setup_persian_ui()
 
 def main():
     st.title("🔍 تحلیل کد پایتون")
+    
+    # اتصال به پایگاه داده
+    if 'db_manager' not in st.session_state:
+        st.session_state.db_manager = DatabaseManager()
+    
+    if 'user_id' not in st.session_state:
+        st.session_state.user_id = st.session_state.db_manager.get_or_create_user()
     
     # نمونه کدهای از پیش تعریف شده
     sample_codes = {
@@ -93,6 +101,13 @@ print(divide_numbers(10, 0))"""
                 # تحلیل AST
                 tree = ast.parse(code)
                 analysis = analyzer.analyze_code(code)
+                
+                # ذخیره تحلیل در پایگاه داده
+                st.session_state.db_manager.save_code_analysis(
+                    user_id=st.session_state.user_id,
+                    code=code,
+                    analysis_result=analysis
+                )
                 
                 # نمایش اطلاعات کلی
                 st.markdown("### اطلاعات کلی:")

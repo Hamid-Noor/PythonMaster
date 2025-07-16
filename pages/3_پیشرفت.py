@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import json
 from datetime import datetime, timedelta
 from utils.persian_text import setup_persian_ui
+from utils.database import DatabaseManager
 
 # تنظیمات صفحه
 st.set_page_config(
@@ -17,8 +18,19 @@ setup_persian_ui()
 def main():
     st.title("📊 ردیابی پیشرفت")
     
+    # اتصال به پایگاه داده
+    if 'db_manager' not in st.session_state:
+        st.session_state.db_manager = DatabaseManager()
+    
+    if 'user_id' not in st.session_state:
+        st.session_state.user_id = st.session_state.db_manager.get_or_create_user()
+    
+    # دریافت پیشرفت از پایگاه داده
+    db_progress = st.session_state.db_manager.get_user_progress(st.session_state.user_id)
+    db_statistics = st.session_state.db_manager.get_user_statistics(st.session_state.user_id)
+    
     # بررسی وجود داده‌های پیشرفت
-    if not st.session_state.user_progress:
+    if not db_progress and not st.session_state.user_progress:
         st.info("هنوز هیچ فعالیتی انجام نداده‌اید. ابتدا تمرین‌ها را حل کنید.")
         return
     

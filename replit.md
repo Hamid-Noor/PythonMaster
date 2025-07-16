@@ -23,9 +23,10 @@ Preferred communication style: Simple, everyday language.
 - **File I/O**: JSON-based data persistence for user progress
 
 ### Data Storage Solutions
-- **Local File Storage**: JSON files for storing user progress and settings
+- **PostgreSQL Database**: Primary storage for user data, exercises, progress, and analytics
 - **Session State**: In-memory storage for temporary data during user sessions
-- **Data Structure**: Hierarchical JSON format for user preferences, statistics, and progress tracking
+- **Data Structure**: Relational database schema with proper indexing and constraints
+- **Backward Compatibility**: JSON file support maintained for migration scenarios
 
 ### Authentication and Authorization
 - **Current Implementation**: No authentication system (single-user application)
@@ -66,6 +67,7 @@ Preferred communication style: Simple, everyday language.
 - **CodeAnalyzer**: AST-based code analysis and explanation
 - **FlowchartGenerator**: Graphviz-based flowchart generation from Python code
 - **ExerciseManager**: Exercise loading and management
+- **DatabaseManager**: PostgreSQL database operations and data management
 - **Persian Text Utils**: RTL text and Persian UI support
 
 ## Data Flow
@@ -85,9 +87,14 @@ Preferred communication style: Simple, everyday language.
 - **JSON**: Data serialization and storage
 - **Graphviz**: Flowchart and diagram generation
 
+### Database Libraries
+- **PostgreSQL**: Primary database system
+- **psycopg2-binary**: PostgreSQL adapter for Python
+- **SQLAlchemy**: SQL toolkit and ORM
+
 ### Visualization Libraries
 - **Matplotlib**: Chart and graph generation for progress tracking
-- **Pandas**: Data manipulation for statistics (imported but usage not shown in provided code)
+- **Pandas**: Data manipulation for statistics
 
 ### System Dependencies
 - **IO/StringIO**: Code execution and output capture

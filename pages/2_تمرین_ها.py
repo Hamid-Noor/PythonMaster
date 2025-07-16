@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import random
 from utils.exercise_manager import ExerciseManager
+from utils.database import DatabaseManager
 from utils.code_analyzer import CodeAnalyzer
 from utils.persian_text import setup_persian_ui
 
@@ -18,8 +19,13 @@ def main():
     st.title("🧩 تمرین‌های عملی")
     
     # مدیریت تمرین‌ها
-    exercise_manager = ExerciseManager()
-    exercises = exercise_manager.load_exercises()
+    if 'db_manager' not in st.session_state:
+        st.session_state.db_manager = DatabaseManager()
+    
+    if 'user_id' not in st.session_state:
+        st.session_state.user_id = st.session_state.db_manager.get_or_create_user()
+    
+    exercises = st.session_state.db_manager.get_exercises()
     
     if not exercises:
         st.error("هیچ تمرینی یافت نشد")
@@ -138,7 +144,18 @@ def main():
             else:
                 st.error("❌ نیاز به مطالعه بیشتر دارید")
             
-            # ذخیره پیشرفت
+            # ذخیره پیشرفت در پایگاه داده
+            st.session_state.db_manager.save_user_progress(
+                user_id=st.session_state.user_id,
+                exercise_id=current_exercise['id'],
+                completed=percentage >= 60,  # حداقل 60% برای تکمیل
+                score=percentage
+            )
+            
+            # به‌روزرسانی آمار کاربر
+            st.session_state.db_manager.update_user_statistics(st.session_state.user_id)
+            
+            # ذخیره در session state برای سازگاری
             if 'completed_exercises' not in st.session_state.user_progress:
                 st.session_state.user_progress['completed_exercises'] = []
             
@@ -146,7 +163,7 @@ def main():
                 'title': current_exercise['title'],
                 'difficulty': current_exercise['difficulty'],
                 'score': percentage,
-                'completed': True
+                'completed': percentage >= 60
             }
             
             # به‌روزرسانی یا اضافه کردن نتیجه
